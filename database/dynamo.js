@@ -105,4 +105,4 @@ const getChatRoom = async (userId1, userId2) => {
 
 
 
-module.exports = { getChatRooms }
+module.exports = { getChatRooms, createChatRoom, getChatRoom }
