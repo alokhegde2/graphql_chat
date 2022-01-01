@@ -5,16 +5,14 @@ const { getChatRooms } = require('../database/dynamo')
 const chatRoom = [
     {
         id: "String",
-        userOneId: "String",
-        userTwoId: "String",
+        userIds: ["@alok", "@hegde"],
         lastMessage: "String",
         lastMessageSendBy: "String",
         lastMessageMessageTS: "String"
     },
     {
         id: "String1",
-        userOneId: "String",
-        userTwoId: "String",
+        userIds: ["@hegde", "@alok"],
         lastMessage: "String",
         lastMessageSendBy: "String",
         lastMessageMessageTS: "String"
@@ -26,7 +24,10 @@ const resolvers = {
         getChatRooms: async (parent, args, context, info) => {
             console.log(args.id);
             const data = await getChatRooms(args.id)
-            return data.data
+            if (data.response === "200") {
+                return chatRoom
+            }
+            return []
         }
     }
 }

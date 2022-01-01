@@ -21,12 +21,10 @@ type Message {
 
 type ChatRoom {
     id: String
-    userOneId: String
-    userTwoId: String
+    users: [String]
     lastMessage: String
     lastMessageSendBy: String
     lastMessageMessageTS: String
-    # message: [Message]
 }
 
 # The "Query" type is special: it lists all of the available queries that
