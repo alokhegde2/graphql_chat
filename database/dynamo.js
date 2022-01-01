@@ -83,6 +83,19 @@ const getChatRoom = async (userId1, userId2) => {
     try {
         const data = await dynamoClient.scan(params).promise()
         console.log(data);
+        if (data.Count === 0) {
+            const chatRoomData = {
+                userOneId: userId1,
+                userTwoId: userId2
+            }
+            const creation_response = await createChatRoom(chatRoomData)
+
+            if (creation_response === 200) {
+                return { data: creation_response, response: 200 }
+            } else {
+                return { response: 500 }
+            }
+        }
         return { data: data.Items, response: 200 }
     } catch (error) {
         console.log(error);
