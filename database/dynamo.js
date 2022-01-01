@@ -21,5 +21,22 @@ const chatRoomTableName = "plugn_chat_rooms"
 
 const messageTableName = "plugn_messages"
 
+const getChatRooms = async (userId) => {
+    const params = {
+        TableName: chatRoomTableName,
+        FilterExpression: '#userOneId = :userId or #userTwoId = :userId', // optional
+        ExpressionAttributeValues: { ':userId': userId }, // optional
+        ExpressionAttributeNames: { '#userOneId': 'userOneId', '#userTwoId': 'userTwoId' }, // 
+    };
 
+    try {
+        const data = await dynamoClient.scan(params).promise()
+        console.log(data);
+        return { data: data.Items, response: "200" }
+    } catch (error) {
+        console.log(error);
+        return { response: "500" }
+    }
+}
 
+module.exports = { getChatRooms }

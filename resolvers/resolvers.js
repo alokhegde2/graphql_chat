@@ -1,7 +1,8 @@
 const pubsub = require('../pubsub/pubsub')
 
+const { getChatRooms } = require('../database/dynamo')
 // Resolvers define the technique for fetching the types defined in the schema.
-const chatRoom =[
+const chatRoom = [
     {
         id: "String",
         userOneId: "String",
@@ -22,9 +23,10 @@ const chatRoom =[
 
 const resolvers = {
     Query: {
-        getChatRooms: (parent, args, context, info) => {
+        getChatRooms: async (parent, args, context, info) => {
             console.log(args.id);
-            return chatRoom
+            const data = await getChatRooms(args.id)
+            return data.data
         }
     }
 }
