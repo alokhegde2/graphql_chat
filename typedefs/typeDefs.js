@@ -33,7 +33,7 @@ type ChatRoom {
 # clients can execute, along with the return type for each. In this
 
 type Query {
-    getChatRooms: [ChatRoom]
+    getChatRooms(id:String): [ChatRoom]
 }
 
 # The "Mutation" type is similar to POST Request
@@ -41,8 +41,8 @@ type Query {
 # And addNewMessage is used to create new message
 
 type Mutation {
-    createNewChatRoom(id: String!,userOneId: String!,userTwoId: String!,lastMessage: String!,lastMessageMessageTS: String!)
-    addNewMessage(id: String!,message: String!,sendBy: String!,attachment: String!,voiceMessageAttachment: String!,TS: String!,chatRoomId: String!)
+    createNewChatRoom(id: String!,userOneId: String!,userTwoId: String!,lastMessage: String!,lastMessageMessageTS: String!):ChatRoom
+    addNewMessage(id: String!,message: String!,sendBy: String!,attachment: String!,voiceMessageAttachment: String!,TS: String!,chatRoomId: String!):Message
 }
 
 # The "Subscription" is a type of websocket coneection

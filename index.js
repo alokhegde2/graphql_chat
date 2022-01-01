@@ -7,6 +7,7 @@ const { SubscriptionServer } = require('subscriptions-transport-ws');
 const { makeExecutableSchema } = require('@graphql-tools/schema');
 
 const typeDefs = require('./typedefs/typeDefs');
+const resolvers = require('./resolvers/resolvers');
 
 (async function () {
     const app = express()
