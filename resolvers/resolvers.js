@@ -24,7 +24,7 @@ const resolvers = {
         getChatRooms: async (parent, args, context, info) => {
             console.log(args.id);
             const data = await getChatRooms(args.id)
-            if (data.response === "200") {
+            if (data.response === 200) {
                 return chatRoom
             }
             return []

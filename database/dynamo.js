@@ -21,6 +21,9 @@ const chatRoomTableName = "plugn_chat_rooms"
 
 const messageTableName = "plugn_messages"
 
+
+// This function will get the chatrooms which are created by/with the logged in user
+
 const getChatRooms = async (userId) => {
     const params = {
         TableName: chatRoomTableName,
@@ -31,13 +34,15 @@ const getChatRooms = async (userId) => {
     try {
         const data = await dynamoClient.scan(params).promise()
         console.log(data);
-        return { data: data.Items, response: "200" }
+        return { data: data.Items, response: 200 }
     } catch (error) {
         console.log(error);
-        return { response: "500" }
+        return { response: 500 }
     }
 }
 
+// This function will create a new chat room for user to do message
+// All chatroom consist of only two user
 
 const createChatRoom = async (args) => {
     const item_data = {
@@ -58,6 +63,29 @@ const createChatRoom = async (args) => {
         return { data: item_data, response: 200 };
     } catch (error) {
         console.error(error);
+        return { response: 500 }
+    }
+}
+
+// This will is used to get one specific chat room
+// This function helps when user searched another user in 
+// Search bar at that time we didn't know the chatroom id
+// At that time this function will get the chat room id if
+// the chat room already exists else it'll create a new one
+
+const getChatRoom = async (userId1, userId2) => {
+    const params = {
+        TableName: chatRoomTableName,
+        FilterExpression: 'contains(userIds,:userId1) and contains(userIds,:userId2)', // optional
+        ExpressionAttributeValues: { ':userId1': userId1, ':userId2': userId2 }, // optional
+    };
+
+    try {
+        const data = await dynamoClient.scan(params).promise()
+        console.log(data);
+        return { data: data.Items, response: 200 }
+    } catch (error) {
+        console.log(error);
         return { response: 500 }
     }
 }
