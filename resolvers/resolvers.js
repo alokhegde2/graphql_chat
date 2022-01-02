@@ -2,22 +2,6 @@ const pubsub = require('../pubsub/pubsub')
 
 const { getChatRooms, createChatRoom, getChatRoom, getMessages, addNewMessage } = require('../database/dynamo')
 // Resolvers define the technique for fetching the types defined in the schema.
-const chatRoom = [
-    {
-        id: "String",
-        userIds: ["@alok", "@hegde"],
-        lastMessage: "String",
-        lastMessageSendBy: "String",
-        lastMessageMessageTS: "String"
-    },
-    {
-        id: "String1",
-        userIds: ["@hegde", "@alok"],
-        lastMessage: "String",
-        lastMessageSendBy: "String",
-        lastMessageMessageTS: "String"
-    }
-]
 
 const resolvers = {
 
