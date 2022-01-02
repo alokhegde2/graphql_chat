@@ -25,9 +25,12 @@ const resolvers = {
             console.log(args.id);
             const data = await getChatRooms(args.id)
             if (data.response === 200) {
-                return chatRoom
+                return data.data
             }
             return []
+        },
+        getMessages: async (parent, args, context, info) => {
+
         }
     },
     Mutation: {
@@ -35,13 +38,15 @@ const resolvers = {
             if (!args.userOneId || !args.userTwoId) {
                 return { message: "Send user Id of the both user", response: 400 }
             }
-
             const data = await getChatRoom(args.userOneId, args.userTwoId)
             if (data.response === 200) {
                 return { message: "Success!", response: 200, chatRoomData: data.data }
             } else {
                 return { message: "Unable to get/Create chat room", response: 400, chatRoomData: [] }
             }
+        },
+        addNewMessage: async (parent, args, context, info) => {
+
         }
     }
 }

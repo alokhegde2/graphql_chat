@@ -104,5 +104,34 @@ const getChatRoom = async (userId1, userId2) => {
 }
 
 
+//Getting all messages between two user
+// We are chatroomid and find all the chats
 
-module.exports = { getChatRooms, createChatRoom, getChatRoom }
+const getMessages = async (chatroomId) => {
+    if (!chatroomId) {
+        return { message: "Send chatRoomId", response: 400 }
+    }
+
+    const params = {
+        TableName: messageTableName,
+        FilterExpression: 'chatRoomId = :chatRoomId', // optional
+        ExpressionAttributeValues: { ':chatRoomId': chatroomId }, // optional
+    };
+
+    try {
+        const data = await dynamoClient.scan(params).promise()
+        return { response: 200, data: data }
+    } catch (error) {
+        console.error(error);
+        return { response: 400, message: "Unable to send message" }
+    }
+}
+
+
+// Add new message to the databse
+
+const addNewMessage = async (args) => { }
+
+
+
+module.exports = { getChatRooms, createChatRoom, getChatRoom, getMessages }
