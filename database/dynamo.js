@@ -142,6 +142,13 @@ const addNewMessage = async (args) => {
         chatRoomId: args.chatRoomId
     }
 
+    const chatRoom_params = {
+        TableName: chatRoomTableName,
+        Key: { id: args.chatRoomId },
+        UpdateExpression: 'set lastMessage = :lastMessage, lastMessageSendBy = :lastMessageSendBy , lastMessageMessageTS = :lastMessageMessageTS',
+        ExpressionAttributeValues: { ':lastMessage': args.message, ':lastMessageSendBy': args.sendBy, ':lastMessageMessageTS': Date.now() },
+    }
+
     const params = {
         TableName: messageTableName,
         Item: item_data
@@ -149,6 +156,7 @@ const addNewMessage = async (args) => {
 
     try {
         await dynamoClient.put(params).promise();
+        dynamoClient.update(chatRoom_params).promise();
         return { data: item_data, response: 200 };
     } catch (error) {
         console.error(error);
