@@ -134,4 +134,4 @@ const addNewMessage = async (args) => { }
 
 
 
-module.exports = { getChatRooms, createChatRoom, getChatRoom, getMessages }
+module.exports = { getChatRooms, createChatRoom, getChatRoom, getMessages, addNewMessage }

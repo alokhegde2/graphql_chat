@@ -1,6 +1,6 @@
 const pubsub = require('../pubsub/pubsub')
 
-const { getChatRooms, createChatRoom, getChatRoom } = require('../database/dynamo')
+const { getChatRooms, createChatRoom, getChatRoom, getMessages, addNewMessage } = require('../database/dynamo')
 // Resolvers define the technique for fetching the types defined in the schema.
 const chatRoom = [
     {
@@ -22,7 +22,6 @@ const chatRoom = [
 const resolvers = {
     Query: {
         getChatRooms: async (parent, args, context, info) => {
-            console.log(args.id);
             const data = await getChatRooms(args.id)
             if (data.response === 200) {
                 return data.data
@@ -30,7 +29,14 @@ const resolvers = {
             return []
         },
         getMessages: async (parent, args, context, info) => {
-
+            const data = await getMessages(args.chatRoomId)
+            if (data.response === 200) {
+                if (data.data.Count === 0) {
+                    return []
+                }
+                return data.data
+            }
+            return []
         }
     },
     Mutation: {
