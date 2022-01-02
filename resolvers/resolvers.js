@@ -1,6 +1,6 @@
 const pubsub = require('../pubsub/pubsub')
 
-const { getChatRooms } = require('../database/dynamo')
+const { getChatRooms, createChatRoom, getChatRoom } = require('../database/dynamo')
 // Resolvers define the technique for fetching the types defined in the schema.
 const chatRoom = [
     {
@@ -28,6 +28,20 @@ const resolvers = {
                 return chatRoom
             }
             return []
+        }
+    },
+    Mutation: {
+        getChatRoom: async (parent, args, context, info) => {
+            if (!args.userOneId || !args.userTwoId) {
+                return { message: "Send user Id of the both user", response: 400 }
+            }
+
+            const data = await getChatRoom(args.userOneId, args.userTwoId)
+            if (data.response === 200) {
+                return { message: "Success!", response: 200, chatRoomData: data.data }
+            } else {
+                return { message: "Unable to get/Create chat room", response: 400, chatRoomData: [] }
+            }
         }
     }
 }

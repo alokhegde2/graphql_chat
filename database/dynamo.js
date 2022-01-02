@@ -90,7 +90,7 @@ const getChatRoom = async (userId1, userId2) => {
             }
             const creation_response = await createChatRoom(chatRoomData)
 
-            if (creation_response === 200) {
+            if (creation_response.response === 200) {
                 return { data: creation_response, response: 200 }
             } else {
                 return { response: 500 }

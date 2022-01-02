@@ -27,6 +27,14 @@ type ChatRoom {
     lastMessageMessageTS: String
 }
 
+# This is the type of the response we are going to send
+ 
+type Response {
+    message: String
+    response: Int
+    chatRoomData: [ChatRoom]
+}
+
 # The "Query" type is special: it lists all of the available queries that
 # clients can execute, along with the return type for each. In this
 
@@ -39,7 +47,7 @@ type Query {
 # And addNewMessage is used to create new message
 
 type Mutation {
-    createNewChatRoom(id: String!,userOneId: String!,userTwoId: String!,lastMessage: String!,lastMessageMessageTS: String!):ChatRoom
+    getChatRoom(userOneId: String!,userTwoId: String!):Response
     addNewMessage(id: String!,message: String!,sendBy: String!,attachment: String!,voiceMessageAttachment: String!,TS: String!,chatRoomId: String!):Message
 }
 
