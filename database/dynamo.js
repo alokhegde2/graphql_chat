@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+const { v4: uuidv4 } = require('uuid');
 
 // Configuring dotenv 
 require('dotenv').config()
@@ -120,7 +121,7 @@ const getMessages = async (chatroomId) => {
 
     try {
         const data = await dynamoClient.scan(params).promise()
-        return { response: 200, data: data }
+        return { response: 200, data: data.Items }
     } catch (error) {
         console.error(error);
         return { response: 400, message: "Unable to send message" }
@@ -130,7 +131,30 @@ const getMessages = async (chatroomId) => {
 
 // Add new message to the databse
 
-const addNewMessage = async (args) => { }
+const addNewMessage = async (args) => {
+    const item_data = {
+        id: uuidv4(),
+        message: args.message,
+        sendBy: args.sendBy,
+        attachment: args.attachment,
+        voiceMessageAttachment: args.voiceMessageAttachment,
+        TS: Date.now(),
+        chatRoomId: args.chatRoomId
+    }
+
+    const params = {
+        TableName: messageTableName,
+        Item: item_data
+    }
+
+    try {
+        await dynamoClient.put(params).promise();
+        return { data: item_data, response: 200 };
+    } catch (error) {
+        console.error(error);
+        return { response: 500 }
+    }
+}
 
 
 

@@ -20,6 +20,9 @@ const chatRoom = [
 ]
 
 const resolvers = {
+
+    //Query
+
     Query: {
         getChatRooms: async (parent, args, context, info) => {
             const data = await getChatRooms(args.id)
@@ -39,7 +42,13 @@ const resolvers = {
             return []
         }
     },
+
+    //Mutations
+
     Mutation: {
+
+        //This mutation will create new chatroom / or get the already created chatroom
+
         getChatRoom: async (parent, args, context, info) => {
             if (!args.userOneId || !args.userTwoId) {
                 return { message: "Send user Id of the both user", response: 400 }
@@ -51,8 +60,16 @@ const resolvers = {
                 return { message: "Unable to get/Create chat room", response: 400, chatRoomData: [] }
             }
         },
-        addNewMessage: async (parent, args, context, info) => {
 
+        //This mutation will add new message
+
+        addNewMessage: async (parent, args, context, info) => {
+            const data = await addNewMessage(args)
+            if (data.response === 200) {
+                return { message: "Success!", response: 200, chatRoomData: [data.data] }
+            } else {
+                return { message: "Unable to add message", response: 400, chatRoomData: [] }
+            }
         }
     }
 }

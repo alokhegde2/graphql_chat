@@ -49,7 +49,7 @@ type Query {
 
 type Mutation {
     getChatRoom(userOneId: String!,userTwoId: String!):Response
-    addNewMessage(id: String!,message: String!,sendBy: String!,attachment: String!,voiceMessageAttachment: String!,chatRoomId: String!):Message
+    addNewMessage(message: String!,sendBy: String!,attachment: String!,voiceMessageAttachment: String!,chatRoomId: String!):Response
 }
 
 # The "Subscription" is a type of websocket coneection
