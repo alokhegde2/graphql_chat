@@ -60,8 +60,8 @@ type Mutation {
 # 2. When newMessageAdded
 
 type Subscription {
-    newChatRoomAdded : ChatRoom
-    newMessageAdded : Message
+    newChatRoomAdded(userId:String!): [ChatRoom]
+    newMessageAdded(chatRoomId:String!) : Message
 }
 `
 

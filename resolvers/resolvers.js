@@ -1,6 +1,7 @@
 const pubsub = require('../pubsub/pubsub')
+const { withFilter } = require('graphql-subscriptions');
 
-const { getChatRooms, createChatRoom, getChatRoom, getMessages, addNewMessage } = require('../database/dynamo')
+const { getChatRooms, getChatRoom, getMessages, addNewMessage } = require('../database/dynamo')
 // Resolvers define the technique for fetching the types defined in the schema.
 
 const resolvers = {
@@ -50,10 +51,27 @@ const resolvers = {
         addNewMessage: async (parent, args, context, info) => {
             const data = await addNewMessage(args)
             if (data.response === 200) {
+                pubsub.publish('MESSAGE_ADDED', { newMessageAdded: data.data });
                 return { message: "Success!", response: 200, chatRoomData: [data.data] }
             } else {
                 return { message: "Unable to add message", response: 400, chatRoomData: [] }
             }
+        }
+    },
+
+    //Subscription
+
+    Subscription: {
+        //When new messages is added
+        newMessageAdded: {
+            subscribe: withFilter(
+                () => pubsub.asyncIterator('MESSAGE_ADDED'),
+                (payload, variables) => {
+                    // It will only push the message only 
+                    // if client given chatRoomId and mutation returned chatRoomID  
+                    return payload.newMessageAdded.chatRoomId === variables.chatRoomId;
+                }
+            )
         }
     }
 }
