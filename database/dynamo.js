@@ -29,15 +29,15 @@ const getChatRooms = async (userId) => {
     const params = {
         TableName: chatRoomTableName,
         FilterExpression: 'contains(userIds,:userId)', // optional
-        ExpressionAttributeValues: { ':userId': userId }, // optional
+        ExpressionAttributeValues: { ':userId': userId },
+        ScanIndexForward: false,
     };
 
     try {
         const data = await dynamoClient.scan(params).promise()
-        console.log(data);
         return { data: data.Items, response: 200 }
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return { response: 500 }
     }
 }
@@ -51,7 +51,7 @@ const createChatRoom = async (args) => {
         userIds: [args.userOneId, args.userTwoId],
         lastMessage: "",
         lastMessageSendBy: "",
-        lastMessageMessageTS: ""
+        lastMessageTS: " "
     }
 
     const params = {
@@ -83,7 +83,6 @@ const getChatRoom = async (userId1, userId2) => {
 
     try {
         const data = await dynamoClient.scan(params).promise()
-        console.log(data);
         if (data.Count === 0) {
             const chatRoomData = {
                 userOneId: userId1,
@@ -99,7 +98,7 @@ const getChatRoom = async (userId1, userId2) => {
         }
         return { data: data.Items, response: 200 }
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return { response: 500 }
     }
 }
@@ -116,7 +115,8 @@ const getMessages = async (chatroomId) => {
     const params = {
         TableName: messageTableName,
         FilterExpression: 'chatRoomId = :chatRoomId', // optional
-        ExpressionAttributeValues: { ':chatRoomId': chatroomId }, // optional
+        ExpressionAttributeValues: { ':chatRoomId': chatroomId}, // optional
+        ScanIndexForward: false,
     };
 
     try {
@@ -138,15 +138,15 @@ const addNewMessage = async (args) => {
         sendBy: args.sendBy,
         attachment: args.attachment,
         voiceMessageAttachment: args.voiceMessageAttachment,
-        TS: Date.now(),
+        TS: Date.now().toString(),
         chatRoomId: args.chatRoomId
     }
 
     const chatRoom_params = {
         TableName: chatRoomTableName,
         Key: { id: args.chatRoomId },
-        UpdateExpression: 'set lastMessage = :lastMessage, lastMessageSendBy = :lastMessageSendBy , lastMessageMessageTS = :lastMessageMessageTS',
-        ExpressionAttributeValues: { ':lastMessage': args.message, ':lastMessageSendBy': args.sendBy, ':lastMessageMessageTS': Date.now() },
+        UpdateExpression: 'set lastMessage = :lastMessage, lastMessageSendBy = :lastMessageSendBy , lastMessageTS = :lastMessageTS',
+        ExpressionAttributeValues: { ':lastMessage': args.message, ':lastMessageSendBy': args.sendBy, ':lastMessageTS': Date.now().toString() },
     }
 
     const params = {

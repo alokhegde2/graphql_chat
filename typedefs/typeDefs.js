@@ -24,7 +24,7 @@ type ChatRoom {
     userIds: [String]
     lastMessage: String
     lastMessageSendBy: String
-    lastMessageMessageTS: String
+    lastMessageTS: String
 }
 
 # This is the type of the response we are going to send
@@ -33,6 +33,12 @@ type Response {
     message: String
     response: Int
     chatRoomData: [ChatRoom]
+}
+
+
+type ResponseSub {
+    message: String
+    data: String
 }
 
 # The "Query" type is special: it lists all of the available queries that
@@ -56,11 +62,11 @@ type Mutation {
 # It will listen for changes or some event to occur
 # once the event occurs subscription will return data
 # client can subscribe for two events 
-# 1. When newChatRoomAdded
+# 1. When chatRoomUpdated
 # 2. When newMessageAdded
 
 type Subscription {
-    newChatRoomAdded(userId:String!): [ChatRoom]
+    chatRoomUpdated(userId:String!): ResponseSub
     newMessageAdded(chatRoomId:String!) : Message
 }
 `

@@ -40,7 +40,7 @@ const resolvers = {
             }
             const data = await getChatRoom(args.userOneId, args.userTwoId)
             if (data.response === 200) {
-                return { message: "Success!", response: 200, chatRoomData: data.data }
+                return { message: "Success!", response: 200, chatRoomData: [data.data] }
             } else {
                 return { message: "Unable to get/Create chat room", response: 400, chatRoomData: [] }
             }
@@ -52,6 +52,9 @@ const resolvers = {
             const data = await addNewMessage(args)
             if (data.response === 200) {
                 pubsub.publish('MESSAGE_ADDED', { newMessageAdded: data.data });
+                const val = data.data.chatRoomId.split('-')
+                console.log(val);
+                pubsub.publish('CHATROOM_UPDATED', { chatRoomUpdated: { data: val, message: "New message arrived" } });
                 return { message: "Success!", response: 200, chatRoomData: [data.data] }
             } else {
                 return { message: "Unable to add message", response: 400, chatRoomData: [] }
@@ -70,6 +73,20 @@ const resolvers = {
                     // It will only push the message only 
                     // if client given chatRoomId and mutation returned chatRoomID  
                     return payload.newMessageAdded.chatRoomId === variables.chatRoomId;
+                }
+            )
+        },
+
+        // When chat room updates means when new message is added order of the 
+        // Chat room will be changed
+        chatRoomUpdated: {
+            subscribe: withFilter(
+                () => pubsub.asyncIterator('CHATROOM_UPDATED'),
+                (payload, variables) => {
+                    // It will only push the message only 
+                    // if client given chatRoomId and mutation returned chatRoomID  
+                    console.log(payload.chatRoomUpdated.data.includes(variables.userId));
+                    return payload.chatRoomUpdated.data.includes(variables.userId);
                 }
             )
         }
