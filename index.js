@@ -10,7 +10,7 @@ const typeDefs = require('./typedefs/typeDefs');
 const resolvers = require('./resolvers/resolvers');
 
 // Configuring dotenv 
-require('dotenv').config()
+require('dotenv').config();
 
 (async function () {
     const app = express()
