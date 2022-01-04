@@ -63,7 +63,7 @@ require('dotenv').config();
 
     //PORT on which the erver is running
 
-    const PORT = process.env.PORT||4000;
+    const PORT = process.env.PORT;
     httpServer.listen(PORT, () =>
         console.log(`Server is now running on http://localhost:${PORT}/graphql`)
     );
