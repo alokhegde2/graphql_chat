@@ -9,6 +9,9 @@ const { makeExecutableSchema } = require('@graphql-tools/schema');
 const typeDefs = require('./typedefs/typeDefs');
 const resolvers = require('./resolvers/resolvers');
 
+// Configuring dotenv 
+require('dotenv').config()
+
 (async function () {
     const app = express()
 
@@ -60,7 +63,7 @@ const resolvers = require('./resolvers/resolvers');
 
     //PORT on which the erver is running
 
-    const PORT = 4000;
+    const PORT = process.env.PORT||4000;
     httpServer.listen(PORT, () =>
         console.log(`Server is now running on http://localhost:${PORT}/graphql`)
     );
